@@ -1,0 +1,156 @@
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+
+<title>BACKPACKER - add location</title>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAAXCmx7hyAYR3Hg-AXHEdbKxQKBp_WCrOUSCNtx_8lpFnqBNbAWxQVrlYld_aceirhDC6bRdGkUYU84A" type="text/javascript"></script>
+    
+	<script type="text/javascript">
+	function showHint(str)
+	{
+	if (str.length==0)
+	  { 
+	  document.getElementById("txtHint").innerHTML="";
+	  return;
+	  }
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+		document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+		}
+	  }
+	xmlhttp.open("GET","getGeoFromAddress.php?address="+str,true);
+	xmlhttp.send();
+	}
+	</script>
+	<script type="text/javascript">
+	
+		function load(lat,lon) {
+		if (GBrowserIsCompatible()) {
+			var map = new GMap2(document.getElementById("map"));
+			map.addControl(new GSmallMapControl());
+			map.addControl(new GMapTypeControl());
+			var center = new GLatLng(60.3912184, 5.3221902);
+			map.setCenter(center, 11);
+			if(lon) {
+				center = new GLatLng(lat, lon);
+			}
+			map.setCenter(center, 11);
+			
+			
+			geocoder = new GClientGeocoder();
+			var marker = new GMarker(center, {draggable: true});  
+			map.addOverlay(marker);
+			
+			document.getElementById("lat").value = center.lat();
+			document.getElementById("lng").value = center.lng();
+			geocoder = new GClientGeocoder();
+			
+			
+			GEvent.addListener(marker, "dragend", function() {
+				var point =marker.getPoint();
+				map.panTo(point);
+				document.getElementById("lat").value = point.lat();
+				document.getElementById("lng").value = point.lng();
+			});
+			GEvent.addListener(map, "moveend", function() {
+				map.clearOverlays();
+				var center = map.getCenter();
+				var marker = new GMarker(center, {draggable: true});
+				map.addOverlay(marker);
+				document.getElementById("lat").value = center.lat();
+				document.getElementById("lng").value = center.lng();
+			});
+			GEvent.addListener(marker, "dragend", function() {
+				var point =marker.getPoint();
+				map.panTo(point);
+				document.getElementById("lat").value = point.lat();
+				document.getElementById("lng").value = point.lng();
+			});
+			GEvent.addListener(marker, "dragend", function() {
+				var point =marker.getPoint();
+				map.panTo(point);
+				document.getElementById("lat").value = point.lat();
+				document.getElementById("lng").value = point.lng();
+			});
+		}
+		
+		
+		
+		GEvent.addListener(map, "moveend", function() {
+			map.clearOverlays();
+			var center = map.getCenter();
+			var marker = new GMarker(center, {draggable: true});
+			map.addOverlay(marker);
+			document.getElementById("lat").value = center.lat();
+			document.getElementById("lng").value = center.lng();
+			GEvent.addListener(marker, "dragend", function() {
+				var pt =marker.getPoint();
+				map.panTo(pt);
+				document.getElementById("lat").value = pt.lat();
+				document.getElementById("lng").value = pt.lng();
+			});
+		});
+		
+		
+	}
+		
+
+		</script>
+	<style type="text/css">
+	
+		.half{
+			width: 50%;
+			display: inline-block;
+			float:left;
+		
+		}
+		
+		.submit{
+			clear: both;
+			float: right;
+		}
+	
+	</style>
+		
+		</head>
+	<body onload="load()" onunload="GUnload()">
+	<div id="body">
+	<h1>Add location</h1>
+	<form method="POST" action="skrivinnsted.php" name="addlocation">
+		<div class="half">
+			<input type="text" name="title" />
+			<h2>Description</h2>
+			<textarea name="description"></textarea>
+		
+			<h2>Add location image</h2>
+			<input type="file" name="image" />
+	</div>
+	
+	
+		<div class="half">
+		Address <input type="text" id="txt1" onkeyup="showHint(this.value)" />
+		<p>Suggestions: <span id="txtHint"></span></p>
+		
+		<div id="map" style="width: 415px; height: 295px"></div>
+		
+		
+			<label>Latitude:</label> <input type="text" id="lat" name="lat" onchange="load(document.getElementById('lat').value,document.getElementById('lng').value)" value="" style="width:160px;border:1px solid #CCCCCC"><br/>		
+			<label>Longitude:</label> <input type="text" id="lng" name="lng" onchange="load(document.getElementById('lat').value,document.getElementById('lng').value)" value="" style="width:160px;margin-top:5px; border:1px solid #CCCCCC">
+
+		
+	</div>
+	<input class="submit" type="submit" value="Add location" />
+	</form>
+</body>
+</html>	

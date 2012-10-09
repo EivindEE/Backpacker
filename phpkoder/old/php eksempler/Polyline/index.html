@@ -1,0 +1,106 @@
+
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+
+<title> Google maps polyline </title>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAAXCmx7hyAYR3Hg-AXHEdbKxQKBp_WCrOUSCNtx_8lpFnqBNbAWxQVrlYld_aceirhDC6bRdGkUYU84A" type="text/javascript"></script>
+    <script type="text/javascript">
+	
+	// blått egendefenert punkt
+	var iconBlue = new GIcon(); 
+    iconBlue.image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+    iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+    iconBlue.iconSize = new GSize(12, 20);
+    iconBlue.shadowSize = new GSize(22, 20);
+    iconBlue.iconAnchor = new GPoint(6, 20);
+    iconBlue.infoWindowAnchor = new GPoint(5, 1);
+	
+	// rød egendefenert punkt 
+    var iconRed = new GIcon(); 
+    iconRed.image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+    iconRed.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+    iconRed.iconSize = new GSize(12, 20);
+    iconRed.shadowSize = new GSize(22, 20);
+    iconRed.iconAnchor = new GPoint(6, 20);
+    iconRed.infoWindowAnchor = new GPoint(5, 1);
+	
+	//setter egendefinerte punkt til type.
+    var customIcons = [];
+    customIcons["togstasjon"] = iconBlue;
+    customIcons["flyplass"] = iconRed;
+	
+function load() {
+	// lager kart hvis browser st�tter google map
+	if (GBrowserIsCompatible()) {
+	
+		// Setter kartet
+        var map = new GMap2(document.getElementById("map"));
+        map.addControl(new GSmallMapControl());
+        map.addControl(new GMapTypeControl());
+		var omc = new GOverviewMapControl();
+		map.addControl(omc);
+		
+		//start punkt for kart
+        map.setCenter(new GLatLng(60.3880719, 5.3318512),3);
+		
+		var flyplass = new GLatLng(60.2907413,5.2206527);
+		var flyplass2 = new GLatLng(40.6444122,-73.7827450);
+		var togstasjon = new GLatLng(60.3903774,5.3332400);
+		
+		var points = [ togstasjon,
+					   flyplass,
+					   flyplass2,
+		
+		];
+		
+		
+		var marker = createMarker(togstasjon, "Bergen Stasjon", "Strømgaten 4", "togstasjon");
+		var marker2 = createMarker(flyplass, "Flesland Bergen Flyplass", "Flesland", "flyplass");
+		var marker3 = createMarker(flyplass2, "John F Kennedy International Airport", "Queens", "flyplass");
+		
+		
+		//polyline options
+		var polyOptions = {geodesic:true};
+		// lager en polyline
+			var polyline = new GPolyline(points, '#ff3056', 5, 0.7,polyOptions);
+			
+		// Legger polylinjen p? kartet
+			map.addOverlay(polyline);
+			
+		// legger markers p� kartet
+            map.addOverlay(marker);
+			map.addOverlay(marker2);
+			map.addOverlay(marker3);
+			}		
+	}
+	
+	//lager en pointer 
+	function createMarker(point, name, address, type) {
+      var marker = new GMarker(point, customIcons[type]);
+      var html = "<b>" + name + "</b> <br/>" + address;
+      GEvent.addListener(marker, 'click', function() {
+        marker.openInfoWindowHtml(html);
+      });
+      return marker; 
+    }
+	
+	function addMapControl(){
+	var OverviewMapControl= new GOverviewMapControl(new GSize(200, 200));
+	map.addControl(OverviewMapControl);
+	document.getElementById('addmapcontrol').style.visibility="hidden";
+	}
+	</script>
+		
+	<!--- Laster og kjører java scriptet med kart-->
+	<body onload="load()" onunload="GUnload()">
+	<!--- setter karte på siden-->
+	<div id="map" style="width: 500px; height: 500px"></div>
+	
+	
+	
+</body>
+</html>	
+
+	
